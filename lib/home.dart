@@ -1,5 +1,7 @@
+import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_cart/cart_screen.dart';
 import 'package:hive_cart/provider/home_provider.dart';
 
 class MyHomePage extends ConsumerStatefulWidget {
@@ -19,6 +21,26 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
           "All Product list",
           style: TextStyle(color: Colors.black),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12.0),
+            child: badges.Badge(
+              position: badges.BadgePosition.topEnd(top: -5, end: 2),
+              badgeContent: const Text(
+                "0",
+                style: TextStyle(color: Colors.white),
+              ),
+              child: IconButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) {
+                    return const CartScreen();
+                  }));
+                },
+                icon: const Icon(Icons.shopping_cart),
+              ),
+            ),
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -60,6 +82,21 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                     fontSize: 16,
                                     color: Colors.amber),
                               ),
+                              Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                      onPressed: () {},
+                                      child: const Text(
+                                        "Add to cart",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                            color: Colors.redAccent),
+                                      )),
+                                ),
+                              )
                             ],
                           ));
                     });
