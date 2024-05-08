@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_cart/models/all_products_list_model/all_products_list_model.dart';
 import 'package:hive_cart/service/product_service.dart';
-import '../models/all_products_list_model/product.dart';
 
 class HomeProvider extends StateNotifier<AsyncValue<AllProductsListModel>> {
   final Ref ref;
-  HomeProvider({required this.ref}) : super(AsyncLoading()) {
+  HomeProvider({required this.ref}) : super(const AsyncLoading()) {
     getAllHomeProducts();
   }
 
@@ -14,7 +13,7 @@ class HomeProvider extends StateNotifier<AsyncValue<AllProductsListModel>> {
     try {
       final response =
           await ref.read(allProductsServiceProvider).getAllProducts();
-      debugPrint("all response${response}");
+      debugPrint("all response$response");
       debugPrint("all response data${response.data["data"]}");
       final data = AllProductsListModel.fromMap(response.data);
       debugPrint("all data${data.data?.products}");
@@ -30,5 +29,6 @@ class HomeProvider extends StateNotifier<AsyncValue<AllProductsListModel>> {
 final homeProductProvider =
     StateNotifierProvider<HomeProvider, AsyncValue<AllProductsListModel>>(
         (ref) {
+
   return HomeProvider(ref: ref);
 });

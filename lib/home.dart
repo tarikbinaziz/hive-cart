@@ -15,7 +15,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.amber,
-        title: Text(
+        title: const Text(
           "All Product list",
           style: TextStyle(color: Colors.black),
         ),
@@ -23,17 +23,17 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ref.read(homeProductProvider).when(
+            ref.watch(homeProductProvider).when(
               data: (data) {
                 debugPrint("data is ${data.data?.products?[0].shopName}");
                 return ListView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: data.data?.products!.length,
                     itemBuilder: (_, index) {
                       final allData = data.data?.products?[index];
                       return Container(
-                          margin: EdgeInsets.all(20),
+                          margin: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
                               border: Border.all(color: Colors.amber),
                               color: Colors.amber.withOpacity(0.08)),
@@ -45,7 +45,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                               ),
                               Text(
                                 data.data?.products![index].name ?? "",
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 16),
                               ),
                               Text(
@@ -55,7 +55,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                               ),
                               Text(
                                 data.data?.products![index].shopName ?? "",
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
                                     color: Colors.amber),
@@ -68,7 +68,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                 return Text("$e");
               },
               loading: () {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               },
             )
           ],
