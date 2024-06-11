@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_cart/cart/cart_repo.dart';
 import 'package:hive_cart/hive/hive_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -51,7 +52,9 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                             trailing: IconButton(
                               icon: const Icon(Icons.remove_shopping_cart),
                               onPressed: () {
-                                setState(() {});
+                                CartRepo().deleteCartItem(
+                                  productId: cartsingleItem.id!,
+                                );
                               },
                             ),
                           ),

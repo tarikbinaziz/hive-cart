@@ -10,6 +10,7 @@ class CartRepo {
       {required Product product, required BuildContext context}) async {
     final cartBox = Hive.box<HiveProduct>("cartBox");
     final cartData = HiveProduct(
+      id: product.id,
       name: product.name,
       description: product.description,
       price: product.price,
@@ -18,7 +19,6 @@ class CartRepo {
       thumbnail: product.thumbnail,
       quantity: 1,
     );
-
 
     if (isProductInCart(product, cartBox)) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -97,6 +97,16 @@ class CartRepo {
       } else {
         cartBox.deleteAt(index);
       }
+    }
+  }
+
+  void deleteCartItem({
+    required int productId,
+  }) {
+    final cartBox = Hive.box<HiveProduct>("cartBox");
+    final cartItem = getCartItemById(productId: productId, cartBox: cartBox);
+    if (cartItem != null) {
+      cartBox.deleteAt(cartBox.values.toList().indexOf(cartItem));
     }
   }
 }
