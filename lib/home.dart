@@ -98,7 +98,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                   child: ElevatedButton(
                                       onPressed: () async {
                                         /// add item to cart then show snackbar
-                                        CartRepo.addToCart(
+                                        CartRepo().addToCart(
                                           context: context,
                                           product: allData,
                                         );

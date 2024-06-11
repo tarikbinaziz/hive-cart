@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_cart/hive/hive_model.dart';
 import 'package:hive_cart/models/all_products_list_model/product.dart';
 
 class CartRepo {
-  final Ref ref;
-  CartRepo({required this.ref});
+  CartRepo();
 
-  static void addToCart({required Product product, context}) async {
+  void addToCart(
+      {required Product product, required BuildContext context}) async {
     final cartBox = Hive.box<HiveProduct>("cartBox");
-    final cartItems = cartBox.values.toList();
-
-    debugPrint("cartitems $cartItems");
-
-    /// convert product to hive model
     final cartData = HiveProduct(
       name: product.name,
       description: product.description,
@@ -25,40 +19,59 @@ class CartRepo {
       quantity: 1,
     );
 
-    ///Print the IDs of items in the cart for debugging
-    // debugPrint('Current cart items: ${cartItems.map((e) => e.id).toList()}');
-    // debugPrint('Adding product ID: ${product.id}');
 
-    // bool exists = cartItems.any((element) => element.id == product.id);
-
-    // if (exists == true) {
-    //   debugPrint('Element exists');
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //       backgroundColor: Colors.red,
-    //       content: Text(
-    //         "Already added to cart",
-    //         style: TextStyle(color: Colors.white),
-    //       ),
-    //     ),
-    //   );
-    // } else {
-    //   await cartBox.add(cartData);
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //       content: Text("Successfully added to cart"),
-    //     ),
-    //   );
-    //   debugPrint('Element added');
-    // }
+    if (isProductInCart(product, cartBox)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Product already in cart"),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } else {
+      cartBox.add(cartData);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Product added to cart"),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
-  HiveProduct? getCartItemById(
-      {required int productId, required Box<HiveProduct> cartBox}) {
-    final HiveProduct cartItem = cartBox.values.firstWhere((product) {
-      return product.id == productId;
-    });
-    return cartItem;
+  bool isProductInCart(Product product, Box<HiveProduct> cartBox) {
+    for (var i = 0; i < cartBox.length; i++) {
+      HiveProduct cartItem = cartBox.getAt(i)!;
+      debugPrint("cartbox ${cartItem.toMap()}");
+      if (cartItem.name == product.name) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // HiveProduct? getCartItemById(
+  //     {required int productId, required Box<HiveProduct> cartBox}) {
+  //   final HiveProduct cartItem = cartBox.values.firstWhere((product) {
+  //     return product.id == productId;
+  //   });
+  //   return cartItem;
+  // }
+
+  static HiveProduct? getCartItemById(
+      {int? productId, required Box<HiveProduct> cartBox}) {
+    if (productId == null) {
+      return null; // Return null if productId is null
+    }
+    try {
+      final HiveProduct? cartItem = cartBox.values.firstWhere(
+        (product) {
+          return product.id == productId;
+        },
+      );
+      return cartItem;
+    } catch (e) {
+      return null; // Return null if there's an error or if the item is not found
+    }
   }
 
   void incrementProductQuantity(
